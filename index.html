@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inter Link Global Travel Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     CONFIG NOTE FOR THE OWNER
+     Everything editable (phone number, currency, destinations,
+     prices, agency name) lives in the CONFIG object inside the
+     <script> at the bottom of this file, clearly marked
+     "EDIT STARTS HERE". You can also click the gear icon in the
+     bottom-right corner of the live site to edit everything from
+     the browser (name, phone, currency, add/remove destinations).
+     Browser edits only last for the current visit (this is a
+     static file with no server) — use the "Copy config" button
+     in that panel to grab the updated code and paste it back into
+     the CONFIG object below to make changes permanent.
+     ============================================================ */
+
+  :root{
+    --navy-deep:#0e2338;
+    --navy:#173a5c;
+    --navy-mid:#2c5578;
+    --gold:#d3af71;
+    --gold-soft:#e8d3a4;
+    --slate:#8a97a8;
+    --paper:#f6f3ec;
+    --paper-dim:#eee9dd;
+    --ink:#182333;
+    --ink-soft:#4d5a6b;
+    --line:#d8cfb9;
+    --stamp-red:#a8443b;
+    --radius:18px;
+    --shadow:0 20px 50px -20px rgba(14,35,56,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  img{max-width:100%;display:block;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* -------------------- Header -------------------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(246,243,236,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 0;gap:20px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:46px;object-fit:contain;}
+  .brand-name{line-height:1.05;}
+  .brand-name .k1{font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;color:var(--navy-deep);display:block;}
+  .brand-name .k2{font-size:0.62rem;letter-spacing:0.16em;color:var(--ink-soft);text-transform:uppercase;}
+
+  nav{display:flex;align-items:center;gap:28px;}
+  nav a{font-size:0.88rem;font-weight:600;color:var(--navy);opacity:0.8;}
+  nav a:hover{opacity:1;}
+  .call-btn{
+    display:flex;align-items:center;gap:8px;
+    background:var(--navy-deep);color:var(--paper);
+    padding:10px 18px;border-radius:100px;font-size:0.85rem;font-weight:600;
+    white-space:nowrap;
+  }
+  .call-btn svg{width:15px;height:15px;flex:none;}
+  .call-btn:hover{background:var(--navy);}
+  .nav-toggle{display:none;background:none;border:none;padding:6px;}
+
+  /* -------------------- Hero -------------------- */
+  .hero{
+    position:relative;overflow:hidden;
+    background:radial-gradient(120% 140% at 15% -10%, var(--navy-mid) 0%, var(--navy-deep) 55%, #081522 100%);
+    color:var(--paper);
+    padding:96px 0 120px;
+  }
+  .hero-inner{position:relative;z-index:2;max-width:640px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--gold-soft);
+    border:1px solid rgba(211,175,113,0.4);padding:6px 14px;border-radius:100px;
+    margin-bottom:26px;
+  }
+  .hero h1{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1.06;color:#fff;}
+  .hero h1 em{font-style:normal;color:var(--gold-soft);}
+  .hero p{font-size:1.05rem;color:rgba(246,243,236,0.78);margin:22px 0 34px;max-width:520px;line-height:1.6;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 26px;border-radius:100px;font-weight:700;font-size:0.92rem;
+    border:1px solid transparent;transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-gold{background:linear-gradient(135deg,var(--gold-soft),var(--gold));color:var(--navy-deep);}
+  .btn-outline{border-color:rgba(246,243,236,0.35);color:#fff;}
+
+  .flight-path{position:absolute;inset:0;z-index:1;opacity:0.9;}
+
+  /* -------------------- Section shell -------------------- */
+  section{padding:88px 0;}
+  .section-head{max-width:620px;margin-bottom:48px;}
+  .section-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--navy-mid);margin-bottom:14px;display:block;
+  }
+  .section-head h2{font-size:clamp(1.8rem,3.2vw,2.4rem);color:var(--navy-deep);}
+  .section-head p{color:var(--ink-soft);margin-top:14px;line-height:1.6;font-size:1rem;}
+
+  .tabs{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap;}
+  .tab-btn{
+    padding:10px 20px;border-radius:100px;border:1px solid var(--line);
+    background:#fff;font-weight:600;font-size:0.85rem;color:var(--ink-soft);
+  }
+  .tab-btn.active{background:var(--navy-deep);color:#fff;border-color:var(--navy-deep);}
+
+  /* -------------------- Ticket cards -------------------- */
+  .ticket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px;}
+  .ticket{
+    position:relative;
+    display:grid;grid-template-columns:1fr 108px;
+    background:#fff;border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .ticket-main{padding:22px 20px;display:flex;flex-direction:column;gap:14px;}
+  .ticket-route{display:flex;align-items:center;gap:10px;}
+  .ticket-route .flag{font-size:1.6rem;line-height:1;}
+  .ticket-route .city{font-family:'Fraunces',serif;font-weight:600;font-size:1.18rem;color:var(--navy-deep);}
+  .ticket-sub{font-size:0.78rem;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;letter-spacing:0.04em;}
+  .ticket-route-line{
+    display:flex;align-items:center;gap:8px;color:var(--slate);
+    font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;
+  }
+  .ticket-route-line .dashline{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--slate) 0 4px,transparent 4px 8px);position:relative;}
+  .ticket-route-line .dashline::after{content:'✈';position:absolute;right:0;top:-9px;font-size:0.8rem;}
+  .ticket-book-btn{
+    margin-top:auto;align-self:flex-start;
+    background:var(--navy-deep);color:#fff;padding:9px 18px;border-radius:100px;
+    font-size:0.8rem;font-weight:700;border:none;
+  }
+  .ticket-book-btn:hover{background:var(--navy);}
+  .ticket-stub{
+    position:relative;background:var(--paper-dim);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    padding:14px 8px;text-align:center;
+    border-left:1px dashed var(--slate);
+  }
+  .ticket-stub::before,.ticket-stub::after{
+    content:'';position:absolute;left:-9px;width:18px;height:18px;border-radius:50%;
+    background:var(--paper);border:1px solid var(--line);
+  }
+  .ticket-stub::before{top:-9px;}
+  .ticket-stub::after{bottom:-9px;}
+  .ticket-price-label{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);}
+  .ticket-price{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:1.05rem;color:var(--navy-deep);}
+  .ticket-barcode{width:60%;height:22px;margin-top:4px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px);opacity:0.55;}
+
+  /* Visa card variant */
+  .visa-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);
+    position:relative;
+  }
+  .visa-stamp{
+    position:absolute;top:18px;right:18px;
+    border:2px solid var(--stamp-red);color:var(--stamp-red);
+    border-radius:50%;width:64px;height:64px;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.05em;
+    transform:rotate(-12deg);opacity:0.85;line-height:1.1;
+  }
+  .visa-card .city{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:600;color:var(--navy-deep);}
+  .visa-row{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--line);padding-top:12px;margin-top:auto;}
+  .visa-fee{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--navy-deep);}
+  .visa-book-btn{
+    background:var(--navy-deep);color:#fff;padding:9px 18px;border-radius:100px;
+    font-size:0.8rem;font-weight:700;border:none;align-self:flex-start;
+  }
+  .visa-book-btn:hover{background:var(--navy);}
+
+  /* -------------------- How it works -------------------- */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px;}
+  .step{position:relative;padding-left:2px;}
+  .step .num{font-family:'Fraunces',serif;font-size:2.4rem;color:var(--gold);font-weight:600;opacity:0.9;}
+  .step h3{font-size:1.02rem;color:var(--navy-deep);margin:8px 0 6px;}
+  .step p{color:var(--ink-soft);font-size:0.92rem;line-height:1.55;}
+
+  /* -------------------- Contact / footer -------------------- */
+  .contact-section{background:var(--navy-deep);color:var(--paper);}
+  .contact-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:50px;}
+  .contact-grid h2{color:#fff;}
+  .contact-info{display:flex;flex-direction:column;gap:18px;margin-top:26px;}
+  .contact-line{display:flex;align-items:center;gap:12px;font-size:0.98rem;}
+  .contact-line svg{width:18px;height:18px;flex:none;color:var(--gold-soft);}
+  .contact-line a{font-weight:600;}
+  .contact-line a:hover{color:var(--gold-soft);}
+  .contact-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:var(--radius);padding:26px;}
+  .contact-card h3{color:#fff;font-size:1.05rem;margin-bottom:14px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:0.75rem;letter-spacing:0.05em;text-transform:uppercase;color:rgba(246,243,236,0.6);margin-bottom:6px;}
+  .field input,.field textarea{
+    width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.08);color:#fff;font-family:inherit;font-size:0.9rem;
+  }
+  .field input::placeholder,.field textarea::placeholder{color:rgba(246,243,236,0.4);}
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,0.12);margin-top:60px;padding-top:22px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    font-size:0.78rem;color:rgba(246,243,236,0.55);
+  }
+
+  /* -------------------- Modal -------------------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(14,35,56,0.55);backdrop-filter:blur(3px);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff;border-radius:var(--radius);max-width:460px;width:100%;
+    padding:30px;position:relative;box-shadow:0 30px 80px -20px rgba(0,0,0,0.4);
+    max-height:88vh;overflow-y:auto;
+  }
+  .modal-close{position:absolute;top:16px;right:16px;background:var(--paper-dim);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;color:var(--ink-soft);}
+  .modal .kicker{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--navy-mid);}
+  .modal h3{font-size:1.3rem;color:var(--navy-deep);margin:6px 0 4px;}
+  .modal .sub{color:var(--ink-soft);font-size:0.88rem;margin-bottom:20px;}
+  .modal .field label{color:var(--ink-soft);}
+  .modal .field input,.modal .field textarea{
+    border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  }
+  .modal .field select{
+    width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);
+    background:var(--paper);color:var(--ink);font-family:inherit;font-size:0.9rem;
+  }
+  .modal-submit{
+    width:100%;background:linear-gradient(135deg,#25D366,#1eb857);color:#fff;
+    padding:13px;border-radius:100px;border:none;font-weight:700;font-size:0.92rem;
+    display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;
+  }
+  .modal-note{font-size:0.75rem;color:var(--ink-soft);margin-top:12px;text-align:center;line-height:1.5;}
+
+  /* -------------------- Admin panel -------------------- */
+  .admin-toggle{
+    position:fixed;bottom:22px;right:22px;z-index:90;
+    width:50px;height:50px;border-radius:50%;background:var(--navy-deep);color:#fff;
+    border:none;box-shadow:0 12px 28px -8px rgba(14,35,56,0.5);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .admin-toggle svg{width:22px;height:22px;}
+  .admin-panel{
+    position:fixed;bottom:84px;right:22px;z-index:90;width:min(380px,90vw);
+    background:#fff;border-radius:16px;border:1px solid var(--line);
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.35);
+    max-height:76vh;overflow-y:auto;display:none;padding:22px;
+  }
+  .admin-panel.open{display:block;}
+  .admin-panel h4{font-size:0.95rem;color:var(--navy-deep);margin-bottom:4px;}
+  .admin-panel .sub{font-size:0.76rem;color:var(--ink-soft);margin-bottom:16px;line-height:1.5;}
+  .admin-panel .field label{color:var(--ink-soft);}
+  .admin-panel .field input{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:8px 10px;font-size:0.85rem;}
+  .admin-row{
+    border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;
+  }
+  .admin-row input{grid-column:span 2;}
+  .admin-row .remove-row{
+    grid-column:span 2;justify-self:end;background:none;border:none;color:var(--stamp-red);
+    font-size:0.75rem;font-weight:600;padding:2px;
+  }
+  .admin-add-btn{
+    width:100%;padding:10px;border-radius:10px;border:1px dashed var(--slate);
+    background:var(--paper);color:var(--navy);font-weight:600;font-size:0.82rem;margin-bottom:16px;
+  }
+  .admin-save-btn{
+    width:100%;padding:11px;border-radius:100px;background:var(--navy-deep);color:#fff;
+    border:none;font-weight:700;font-size:0.85rem;margin-top:6px;
+  }
+  .admin-copy-btn{
+    width:100%;padding:11px;border-radius:100px;background:var(--paper-dim);color:var(--navy-deep);
+    border:1px solid var(--line);font-weight:700;font-size:0.85rem;margin-top:8px;
+  }
+  .admin-divider{border-top:1px solid var(--line);margin:18px 0;}
+
+  @media (max-width:860px){
+    .contact-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:760px){
+    nav{
+      position:fixed;top:73px;left:0;right:0;background:var(--paper);
+      flex-direction:column;align-items:flex-start;gap:0;
+      border-bottom:1px solid var(--line);
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+    }
+    nav.open{max-height:320px;}
+    nav a{padding:14px 28px;width:100%;border-bottom:1px solid var(--line);}
+    .nav-toggle{display:block;}
+    .call-btn span{display:none;}
+    .ticket{grid-template-columns:1fr 90px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="brand">
+      <img src="logo.jpeg" alt="Inter Link Global Travel Agency logo">
+      <div class="brand-name">
+        <span class="k1" id="brandName1">Inter Link</span>
+        <span class="k2" id="brandName2">Global Travel Agency</span>
+      </div>
+    </div>
+    <nav id="mainNav">
+      <a href="#destinations">Destinations</a>
+      <a href="#visas">Visa Appointments</a>
+      <a href="#how">How it works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a class="call-btn" id="headerCallBtn" href="tel:+212612530421">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span id="headerCallText">+212 612530421</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#173a5c" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================= HERO ============================= -->
+<section class="hero">
+  <svg class="flight-path" viewBox="0 0 1180 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M -50 420 C 250 280, 500 480, 780 260 S 1150 60, 1260 40" stroke="#d3af71" stroke-width="1.4" stroke-dasharray="2 10" fill="none" opacity="0.55"/>
+    <path d="M -50 120 C 200 60, 420 220, 700 140 S 1000 260, 1260 220" stroke="#8a97a8" stroke-width="1.2" stroke-dasharray="2 9" fill="none" opacity="0.4"/>
+    <circle cx="780" cy="260" r="4" fill="#e8d3a4"/>
+    <circle cx="-50" cy="420" r="4" fill="#e8d3a4"/>
+  </svg>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Travel &amp; Visa Booking, Simplified</span>
+    <h1>Every journey starts with <em>a link.</em></h1>
+    <p id="heroText">From your next getaway to your visa appointment — Inter Link Global Travel Agency plans the route, handles the paperwork, and keeps you moving. Tell us where, and we'll take it from there.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-gold" href="#destinations">Book a Trip</a>
+      <a class="btn btn-outline" href="#visas">Book a Visa Appointment</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= DESTINATIONS ============================= -->
+<section id="destinations">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">Boarding · Destinations</span>
+      <h2>Pick a destination, we'll print the ticket.</h2>
+      <p>Every package below includes flights and agency handling. Tap a destination to send us your travel details directly on WhatsApp — no forms lost, no waiting on hold.</p>
+    </div>
+    <div class="ticket-grid" id="destinationGrid"></div>
+  </div>
+</section>
+
+<!-- ============================= VISA APPOINTMENTS ============================= -->
+<section id="visas" style="background:var(--paper-dim);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">Stamp · Visa Appointments</span>
+      <h2>Skip the embassy queue.</h2>
+      <p>We book and confirm your visa appointment slot for the countries below, and guide you through the required documents beforehand.</p>
+    </div>
+    <div class="ticket-grid" id="visaGrid"></div>
+  </div>
+</section>
+
+<!-- ============================= HOW IT WORKS ============================= -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">Process</span>
+      <h2>Three steps to takeoff.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">01</span>
+        <h3>Choose your destination</h3>
+        <p>Pick a travel package or a visa appointment from the lists above.</p>
+      </div>
+      <div class="step">
+        <span class="num">02</span>
+        <h3>Send your details</h3>
+        <p>Fill the short form — it opens WhatsApp with everything pre-filled, ready to send.</p>
+      </div>
+      <div class="step">
+        <span class="num">03</span>
+        <h3>We confirm &amp; handle it</h3>
+        <p>Our team replies with pricing confirmation, required documents, and your booking reference.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= CONTACT ============================= -->
+<section id="contact" class="contact-section">
+  <div class="wrap contact-grid">
+    <div>
+      <span class="section-tag" style="color:var(--gold-soft);">Get in touch</span>
+      <h2>Ready when you are.</h2>
+      <p style="color:rgba(246,243,236,0.75);margin-top:14px;line-height:1.6;">Call, WhatsApp, or send a message — our team replies fast, every day of the week.</p>
+      <div class="contact-info">
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <a id="contactPhoneLink" href="tel:+212612530421">+212 612530421</a>
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <a id="contactWhatsappLink" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <span>booking@interlinkglobal.travel</span>
+        </div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <h3>Send a general enquiry</h3>
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="genName" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label>Your phone / WhatsApp</label>
+        <input type="text" id="genPhone" placeholder="e.g. +212 6XX XXX XXX">
+      </div>
+      <div class="field">
+        <label>Message</label>
+        <textarea id="genMessage" rows="4" placeholder="Tell us what you're planning..."></textarea>
+      </div>
+      <button class="modal-submit" id="genSubmit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Send via WhatsApp
+      </button>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span id="footerBrand">© 2026 Inter Link Global Travel Agency. All rights reserved.</span>
+    <span>Casablanca, Morocco</span>
+  </div>
+</section>
+
+<!-- ============================= BOOKING MODAL ============================= -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <span class="kicker" id="modalKicker">Book a trip</span>
+    <h3 id="modalTitle">Destination</h3>
+    <p class="sub" id="modalSub">Fill in your details — we'll open WhatsApp with everything ready to send.</p>
+    <div class="field">
+      <label>Full name</label>
+      <input type="text" id="bkName" placeholder="Your name">
+    </div>
+    <div class="field">
+      <label>Phone / WhatsApp</label>
+      <input type="text" id="bkPhone" placeholder="e.g. +212 6XX XXX XXX">
+    </div>
+    <div class="field" id="dateFieldWrap">
+      <label id="dateLabel">Preferred travel date</label>
+      <input type="date" id="bkDate">
+    </div>
+    <div class="field" id="travelersFieldWrap">
+      <label>Number of travelers</label>
+      <select id="bkTravelers">
+        <option value="1">1 traveler</option>
+        <option value="2">2 travelers</option>
+        <option value="3">3 travelers</option>
+        <option value="4">4 travelers</option>
+        <option value="5+">5 or more</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Notes (optional)</label>
+      <textarea id="bkNotes" rows="3" placeholder="Anything we should know?"></textarea>
+    </div>
+    <button class="modal-submit" id="bkSubmit">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Send request via WhatsApp
+    </button>
+    <p class="modal-note">This opens WhatsApp with your request pre-filled. Nothing is booked until our team confirms.</p>
+  </div>
+</div>
+
+<!-- ============================= ADMIN / CUSTOMIZE PANEL ============================= -->
+<button class="admin-toggle" id="adminToggle" title="Customize site">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="4.2"/></svg>
+</button>
+<div class="admin-panel" id="adminPanel">
+  <h4>Customize this site</h4>
+  <p class="sub">Changes apply instantly for this visit. Click "Copy config" at the bottom and paste it into the CONFIG object in the file's &lt;script&gt; to make changes permanent.</p>
+
+  <div class="field"><label>Agency name (line 1)</label><input type="text" id="admBrand1"></div>
+  <div class="field"><label>Agency tagline (line 2)</label><input type="text" id="admBrand2"></div>
+  <div class="field"><label>Phone number (with country code)</label><input type="text" id="admPhone" placeholder="+212612530421"></div>
+  <div class="field"><label>Currency label</label><input type="text" id="admCurrency" placeholder="MAD"></div>
+
+  <div class="admin-divider"></div>
+  <h4>Travel destinations</h4>
+  <p class="sub">Flag emoji, city, country, and package price.</p>
+  <div id="admDestRows"></div>
+  <button class="admin-add-btn" id="admAddDest">+ Add destination</button>
+
+  <div class="admin-divider"></div>
+  <h4>Visa appointment countries</h4>
+  <p class="sub">Country name and appointment fee.</p>
+  <div id="admVisaRows"></div>
+  <button class="admin-add-btn" id="admAddVisa">+ Add visa country</button>
+
+  <button class="admin-save-btn" id="admSave">Apply changes</button>
+  <button class="admin-copy-btn" id="admCopy">Copy config as code</button>
+</div>
+
+<script>
+/* ================================================================
+   EDIT STARTS HERE — everything on the site is generated from
+   this CONFIG object. Change agency name, phone number, currency,
+   or the destination / visa lists below and reload the page.
+   ================================================================ */
+const CONFIG = {
+  brandLine1: "Inter Link",
+  brandLine2: "Global Travel Agency",
+  phone: "+212612530421",          // digits + leading + only, used for tel: and wa.me links
+  phoneDisplay: "+212 612530421",  // how it's shown on screen
+  currency: "MAD",
+  destinations: [
+    { flag:"🇫🇷", city:"Paris", country:"France", price:4200 },
+    { flag:"🇹🇷", city:"Istanbul", country:"Turkey", price:3100 },
+    { flag:"🇦🇪", city:"Dubai", country:"UAE", price:6800 },
+    { flag:"🇪🇸", city:"Barcelona", country:"Spain", price:2600 },
+    { flag:"🇬🇧", city:"London", country:"United Kingdom", price:5400 },
+    { flag:"🇮🇹", city:"Rome", country:"Italy", price:3800 },
+    { flag:"🇶🇦", city:"Doha", country:"Qatar", price:6200 },
+    { flag:"🇨🇦", city:"Montreal", country:"Canada", price:9500 }
+  ],
+  visaCountries: [
+    { country:"France (Schengen)", fee:900 },
+    { country:"United Kingdom", fee:1200 },
+    { country:"United States", fee:1600 },
+    { country:"Canada", fee:1400 },
+    { country:"Germany (Schengen)", fee:900 },
+    { country:"UAE", fee:600 }
+  ]
+};
+/* ================================================================
+   EDIT ENDS HERE — no need to touch anything below this line.
+   ================================================================ */
+
+let state = JSON.parse(JSON.stringify(CONFIG));
+
+function fmtPrice(n){ return Number(n).toLocaleString() + " " + state.currency; }
+function waLink(text){ return "https://wa.me/" + state.phone.replace(/[^0-9]/g,"") + "?text=" + encodeURIComponent(text); }
+
+function renderBrand(){
+  document.getElementById("brandName1").textContent = state.brandLine1;
+  document.getElementById("brandName2").textContent = state.brandLine2;
+  document.getElementById("footerBrand").textContent = "© 2026 " + state.brandLine1 + " " + state.brandLine2 + ". All rights reserved.";
+  document.title = state.brandLine1 + " " + state.brandLine2;
+
+  document.getElementById("headerCallBtn").href = "tel:" + state.phone;
+  document.getElementById("headerCallText").textContent = state.phoneDisplay;
+  document.getElementById("contactPhoneLink").href = "tel:" + state.phone;
+  document.getElementById("contactPhoneLink").textContent = state.phoneDisplay;
+  document.getElementById("contactWhatsappLink").href = waLink("Hi " + state.brandLine1 + ", I'd like to know more about your travel packages.");
+}
+
+function renderDestinations(){
+  const grid = document.getElementById("destinationGrid");
+  grid.innerHTML = "";
+  state.destinations.forEach((d, i) => {
+    const el = document.createElement("div");
+    el.className = "ticket";
+    el.innerHTML = `
+      <div class="ticket-main">
+        <div class="ticket-route">
+          <span class="flag">${d.flag||"🌍"}</span>
+          <div>
+            <div class="city">${d.city}</div>
+            <div class="ticket-sub">${d.country}</div>
+          </div>
+        </div>
+        <div class="ticket-route-line"><span>CMN</span><span class="dashline"></span><span>${(d.city||"").slice(0,3).toUpperCase()}</span></div>
+        <button class="ticket-book-btn" data-type="trip" data-index="${i}">Book this trip</button>
+      </div>
+      <div class="ticket-stub">
+        <span class="ticket-price-label">From</span>
+        <span class="ticket-price">${fmtPrice(d.price)}</span>
+        <div class="ticket-barcode"></div>
+      </div>`;
+    grid.appendChild(el);
+  });
+}
+
+function renderVisas(){
+  const grid = document.getElementById("visaGrid");
+  grid.innerHTML = "";
+  state.visaCountries.forEach((v, i) => {
+    const el = document.createElement("div");
+    el.className = "visa-card";
+    el.innerHTML = `
+      <div class="visa-stamp">VISA<br>SLOT</div>
+      <div class="city">${v.country}</div>
+      <div class="ticket-sub">Appointment &amp; document guidance included</div>
+      <div class="visa-row">
+        <div>
+          <div class="ticket-price-label">Service fee</div>
+          <div class="visa-fee">${fmtPrice(v.fee)}</div>
+        </div>
+        <button class="visa-book-btn" data-type="visa" data-index="${i}">Request appointment</button>
+      </div>`;
+    grid.appendChild(el);
+  });
+}
+
+function renderAll(){ renderBrand(); renderDestinations(); renderVisas(); }
+renderAll();
+
+/* -------------------- Booking modal -------------------- */
+const overlay = document.getElementById("bookingModal");
+let currentBooking = null;
+
+document.body.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-type]");
+  if (!btn) return;
+  const type = btn.dataset.type;
+  const index = Number(btn.dataset.index);
+  const item = type === "trip" ? state.destinations[index] : state.visaCountries[index];
+  currentBooking = { type, item };
+
+  document.getElementById("modalKicker").textContent = type === "trip" ? "Book a trip" : "Visa appointment";
+  document.getElementById("modalTitle").textContent = type === "trip" ? (item.city + ", " + item.country) : item.country;
+  document.getElementById("modalSub").textContent = type === "trip"
+    ? "Package from " + fmtPrice(item.price) + ". Fill in your details below."
+    : "Appointment service fee " + fmtPrice(item.fee) + ". Fill in your details below.";
+  document.getElementById("dateLabel").textContent = type === "trip" ? "Preferred travel date" : "Preferred appointment date";
+  document.getElementById("travelersFieldWrap").style.display = type === "trip" ? "block" : "none";
+  document.getElementById("bkName").value = "";
+  document.getElementById("bkPhone").value = "";
+  document.getElementById("bkDate").value = "";
+  document.getElementById("bkNotes").value = "";
+  overlay.classList.add("open");
+});
+
+document.getElementById("modalClose").addEventListener("click", () => overlay.classList.remove("open"));
+overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.remove("open"); });
+
+document.getElementById("bkSubmit").addEventListener("click", () => {
+  if (!currentBooking) return;
+  const name = document.getElementById("bkName").value.trim();
+  const phone = document.getElementById("bkPhone").value.trim();
+  const date = document.getElementById("bkDate").value;
+  const travelers = document.getElementById("bkTravelers").value;
+  const notes = document.getElementById("bkNotes").value.trim();
+
+  if (!name || !phone) { alert("Please add your name and phone number."); return; }
+
+  const { type, item } = currentBooking;
+  let msg = `Hi ${state.brandLine1}, I'd like to book:\n`;
+  if (type === "trip") {
+    msg += `Destination: ${item.city}, ${item.country}\nPackage price: ${fmtPrice(item.price)}\nTravelers: ${travelers}\n`;
+  } else {
+    msg += `Visa appointment: ${item.country}\nService fee: ${fmtPrice(item.fee)}\n`;
+  }
+  msg += `Preferred date: ${date || "Flexible"}\nName: ${name}\nPhone: ${phone}\n`;
+  if (notes) msg += `Notes: ${notes}\n`;
+
+  window.open(waLink(msg), "_blank");
+  overlay.classList.remove("open");
+});
+
+document.getElementById("genSubmit").addEventListener("click", () => {
+  const name = document.getElementById("genName").value.trim();
+  const phone = document.getElementById("genPhone").value.trim();
+  const message = document.getElementById("genMessage").value.trim();
+  if (!name || !message) { alert("Please add your name and a short message."); return; }
+  let msg = `Hi ${state.brandLine1}, my name is ${name}.\n${message}`;
+  if (phone) msg += `\nMy phone: ${phone}`;
+  window.open(waLink(msg), "_blank");
+});
+
+/* -------------------- Mobile nav -------------------- */
+document.getElementById("navToggle").addEventListener("click", () => {
+  document.getElementById("mainNav").classList.toggle("open");
+});
+document.querySelectorAll("#mainNav a").forEach(a => a.addEventListener("click", () => {
+  document.getElementById("mainNav").classList.remove("open");
+}));
+
+/* -------------------- Admin panel -------------------- */
+const adminToggle = document.getElementById("adminToggle");
+const adminPanel = document.getElementById("adminPanel");
+adminToggle.addEventListener("click", () => {
+  adminPanel.classList.toggle("open");
+  if (adminPanel.classList.contains("open")) fillAdminForm();
+});
+
+function fillAdminForm(){
+  document.getElementById("admBrand1").value = state.brandLine1;
+  document.getElementById("admBrand2").value = state.brandLine2;
+  document.getElementById("admPhone").value = state.phoneDisplay;
+  document.getElementById("admCurrency").value = state.currency;
+
+  const destRows = document.getElementById("admDestRows");
+  destRows.innerHTML = "";
+  state.destinations.forEach((d, i) => destRows.appendChild(destRowEl(d, i)));
+
+  const visaRows = document.getElementById("admVisaRows");
+  visaRows.innerHTML = "";
+  state.visaCountries.forEach((v, i) => visaRows.appendChild(visaRowEl(v, i)));
+}
+
+function destRowEl(d, i){
+  const row = document.createElement("div");
+  row.className = "admin-row";
+  row.dataset.index = i;
+  row.innerHTML = `
+    <input type="text" class="d-flag" placeholder="Flag emoji" value="${d.flag||""}">
+    <input type="text" class="d-city" placeholder="City" value="${d.city||""}">
+    <input type="text" class="d-country" placeholder="Country" value="${d.country||""}">
+    <input type="number" class="d-price" placeholder="Price" value="${d.price||0}">
+    <button class="remove-row">Remove destination</button>`;
+  row.querySelector(".remove-row").addEventListener("click", () => row.remove());
+  return row;
+}
+function visaRowEl(v, i){
+  const row = document.createElement("div");
+  row.className = "admin-row";
+  row.dataset.index = i;
+  row.innerHTML = `
+    <input type="text" class="v-country" placeholder="Country" value="${v.country||""}" style="grid-column:span 2;">
+    <input type="number" class="v-fee" placeholder="Fee" value="${v.fee||0}" style="grid-column:span 2;">
+    <button class="remove-row">Remove visa country</button>`;
+  row.querySelector(".remove-row").addEventListener("click", () => row.remove());
+  return row;
+}
+
+document.getElementById("admAddDest").addEventListener("click", () => {
+  document.getElementById("admDestRows").appendChild(destRowEl({flag:"🌍",city:"",country:"",price:0}, 0));
+});
+document.getElementById("admAddVisa").addEventListener("click", () => {
+  document.getElementById("admVisaRows").appendChild(visaRowEl({country:"",fee:0}, 0));
+});
+
+document.getElementById("admSave").addEventListener("click", () => {
+  state.brandLine1 = document.getElementById("admBrand1").value.trim() || state.brandLine1;
+  state.brandLine2 = document.getElementById("admBrand2").value.trim() || state.brandLine2;
+  const phoneVal = document.getElementById("admPhone").value.trim();
+  if (phoneVal){ state.phoneDisplay = phoneVal; state.phone = phoneVal.replace(/[^0-9+]/g,""); }
+  state.currency = document.getElementById("admCurrency").value.trim() || state.currency;
+
+  state.destinations = Array.from(document.querySelectorAll("#admDestRows .admin-row")).map(r => ({
+    flag: r.querySelector(".d-flag").value.trim(),
+    city: r.querySelector(".d-city").value.trim(),
+    country: r.querySelector(".d-country").value.trim(),
+    price: Number(r.querySelector(".d-price").value) || 0
+  })).filter(d => d.city);
+
+  state.visaCountries = Array.from(document.querySelectorAll("#admVisaRows .admin-row")).map(r => ({
+    country: r.querySelector(".v-country").value.trim(),
+    fee: Number(r.querySelector(".v-fee").value) || 0
+  })).filter(v => v.country);
+
+  renderAll();
+  adminPanel.classList.remove("open");
+});
+
+document.getElementById("admCopy").addEventListener("click", () => {
+  const code = "const CONFIG = " + JSON.stringify(state, null, 2) + ";";
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById("admCopy");
+    const original = btn.textContent;
+    btn.textContent = "Copied! Paste into the script.";
+    setTimeout(() => btn.textContent = original, 2000);
+  });
+});
+</script>
+</body>
+</html>
