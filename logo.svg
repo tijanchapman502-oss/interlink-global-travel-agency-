@@ -1,0 +1,34 @@
+<svg viewBox="0 0 1080 540" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1080" height="540" fill="#f6f3ec"/>
+  
+  <!-- Globe and plane illustration -->
+  <g transform="translate(400, 150)">
+    <!-- Globe -->
+    <circle cx="120" cy="120" r="100" fill="none" stroke="#0e2338" stroke-width="3"/>
+    <path d="M 120 20 Q 160 50, 160 120 Q 160 180, 120 210 Q 80 180, 80 120 Q 80 50, 120 20" fill="#173a5c" opacity="0.3"/>
+    <path d="M 60 120 Q 120 100, 180 120" fill="none" stroke="#0e2338" stroke-width="2"/>
+    <path d="M 80 80 Q 120 100, 160 90" fill="none" stroke="#0e2338" stroke-width="1.5" opacity="0.6"/>
+    <path d="M 85 160 Q 120 140, 155 150" fill="none" stroke="#0e2338" stroke-width="1.5" opacity="0.6"/>
+    
+    <!-- Grid lines -->
+    <circle cx="120" cy="120" r="50" fill="none" stroke="#0e2338" stroke-width="1" opacity="0.4"/>
+    <circle cx="120" cy="120" r="75" fill="none" stroke="#0e2338" stroke-width="1" opacity="0.4"/>
+    
+    <!-- Orbiting rings -->
+    <ellipse cx="120" cy="120" rx="130" ry="60" fill="none" stroke="#d3af71" stroke-width="4" opacity="0.7" transform="rotate(-20 120 120)"/>
+    <ellipse cx="120" cy="120" rx="130" ry="50" fill="none" stroke="#d3af71" stroke-width="3" opacity="0.5" transform="rotate(25 120 120)"/>
+    
+    <!-- Airplane -->
+    <g transform="translate(240, 40) rotate(35)">
+      <ellipse cx="0" cy="0" rx="25" ry="15" fill="#0e2338"/>
+      <path d="M -15 0 L 25 0" stroke="#0e2338" stroke-width="4" stroke-linecap="round"/>
+      <rect x="-8" y="-20" width="16" height="15" fill="#0e2338"/>
+      <polygon points="20,-3 30,0 20,3" fill="#0e2338"/>
+    </g>
+  </g>
+  
+  <!-- Text -->
+  <text x="540" y="380" font-family="'Fraunces', serif" font-size="72" font-weight="700" fill="#0e2338" text-anchor="middle" letter-spacing="-1">INTER LINK</text>
+  <text x="540" y="450" font-family="'Inter', sans-serif" font-size="40" font-weight="600" fill="#173a5c" text-anchor="middle" letter-spacing="2">GLOBAL TRAVEL AGENCY</text>
+</svg>
